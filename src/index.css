@@ -30,4 +30,9 @@ button {
   border: none;
   border-radius: .3rem;
   color: white;
+  background-color: #333;
+}
+
+button.selected {
+  background-color: rgb(0, 168, 0);
 }
