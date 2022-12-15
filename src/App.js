@@ -1,6 +1,7 @@
 import './App.css';
 import { useEffect, useRef, useState } from 'react';
 import { numberIterator } from './tools/NumberTools';
+import useDebounce from './hooks/useDebounce';
 function App() {
   return (
     <PagesProfiling />
@@ -17,6 +18,12 @@ const PagesProfiling = () => {
   const [pageType, setPageType] = useState('svg');
   const [size, setSize] = useState(50);
   const [light, setLight] = useState(false);
+  const debouncedSize = useDebounce(size, 200);
+
+  useEffect(() => {
+    console.log('after size', size);
+    setLight(false);
+  }, [debouncedSize]);
 
 
   const pages = numberIterator(0, 5).map(idx => {
@@ -31,7 +38,11 @@ const PagesProfiling = () => {
   return <div style={{ flex: '1', display: 'flex', flexDirection: 'column', gap: '.5rem' }}>
     <header style={{ display: 'flex', gap: '.5rem', padding: '.5rem' }}>
       <h2 style={{ margin: '0', color: 'white' }}>Scalingtest2</h2>
-      <input type="range" min="50" max="800" value={size} onChange={e => setSize(e.target.value)} />
+      <input type="range" min="50" max="800" value={size} onChange={e => {
+        setLight(true);
+        setSize(e.target.value);
+
+      }} />
       <button style={{ background: pageType === 'svg' ? 'dodgerblue' : '#2f3740' }} onClick={e => setPageType('svg')}>SVG</button><button style={{ background: pageType === 'png' ? 'dodgerblue' : '#2f3740' }} onClick={e => setPageType('png')}>PNG</button>
       <button onClick={e => setLight(!light)}>Light {light ? 'OFF' : 'ON'}</button>
     </header>
